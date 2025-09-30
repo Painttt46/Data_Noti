@@ -17,7 +17,11 @@ class PowerAutomatePayload(BaseModel):
     form_data: Dict[str, Any]
 
 # สร้าง API Endpoint
-@app.post("/webhook/form-response")
+@app.get("/")
+async def read_root():
+    return {"status": "ok", "message": "API is online!"}
+
+@app.post("/api")
 async def receive_power_automate_data(payload: PowerAutomatePayload):
     """
     Endpoint นี้จะรอรับข้อมูล (POST request) จาก Power Automate
