@@ -32,5 +32,3 @@ async def receive_power_automate_data(payload: PowerAutomatePayload):
     except Exception as e:
         print(f"❌ เกิดข้อผิดพลาด: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
-handler = app
