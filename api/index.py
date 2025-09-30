@@ -1,33 +1,21 @@
-# main.py
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing import Any, Dict
 
-# สร้าง Instance ของ FastAPI
-app = FastAPI(
-    title="Power Automate Webhook API",
-    description="API สำหรับรับข้อมูลจาก Power Automate workflow",
-    version="1.0.0"
-)
+app = FastAPI()
 
-# สร้าง Model เพื่อรับข้อมูล JSON ที่ส่งมาจาก Power Automate
 class PowerAutomatePayload(BaseModel):
     responder_email: str = Field(..., example="user@example.com")
     submission_time: str = Field(..., example="2025-09-30T10:30:00Z")
     form_data: Dict[str, Any]
 
-# สร้าง API Endpoint
 @app.get("/")
 async def read_root():
     return {"status": "ok", "message": "API is online!"}
 
 @app.post("/api")
 async def receive_power_automate_data(payload: PowerAutomatePayload):
-    """
-    Endpoint นี้จะรอรับข้อมูล (POST request) จาก Power Automate
-    """
     try:
-        # แสดงข้อมูลที่ได้รับใน Console (Vercel จะแสดงใน Logs)
         print("✅ ได้รับข้อมูลจาก Power Automate:")
         print(f"   - อีเมลผู้ตอบ: {payload.responder_email}")
         print(f"   - เวลาที่ส่ง: {payload.submission_time}")
@@ -36,7 +24,6 @@ async def receive_power_automate_data(payload: PowerAutomatePayload):
         for question, answer in payload.form_data.items():
             print(f"     - {question}: {answer}")
 
-        # ส่ง Response กลับไปบอก Power Automate ว่ารับข้อมูลสำเร็จแล้ว
         return {
             "status": "success", 
             "message": "Data received successfully."
@@ -46,5 +33,4 @@ async def receive_power_automate_data(payload: PowerAutomatePayload):
         print(f"❌ เกิดข้อผิดพลาด: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Vercel handler
 handler = app
