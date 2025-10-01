@@ -18,14 +18,6 @@ class PowerAutomatePayload(BaseModel):
     submission_time: str = Field(..., example="2025-09-30T10:30:00Z")
     form_data: Dict[str, Any]
 
-@app.api_route("/debug", methods=["GET", "POST", "OPTIONS"])
-async def debug_endpoint(request: Request):
-    headers = dict(request.headers)
-    print("--- DEBUG LOG ---")
-    print(f"Method: {request.method}")
-    print(f"Headers: {headers}")
-    print("--- END DEBUG ---")
-    return {"status": "ok", "received_headers": headers}
 
 @app.get("/")
 async def read_root():
@@ -33,12 +25,13 @@ async def read_root():
 
 @app.post("/api")
 async def receive_power_automate_data(payload: PowerAutomatePayload):
+    
     try:
-        print("✅ ได้รับข้อมูลจาก Power Automate:")
-        print(f"   - อีเมลผู้ตอบ: {payload.responder_email}")
-        print(f"   - เวลาที่ส่ง: {payload.submission_time}")
+        print("✅ have Data")
+        print(f"   - respond email: {payload.responder_email}")
+        print(f"   - submit time: {payload.submission_time}")
         
-        print("   - ข้อมูลในฟอร์ม:")
+        print("   - forms data:")
         for question, answer in payload.form_data.items():
             print(f"     - {question}: {answer}")
 
@@ -48,5 +41,5 @@ async def receive_power_automate_data(payload: PowerAutomatePayload):
         }
     
     except Exception as e:
-        print(f"❌ เกิดข้อผิดพลาด: {e}")
+        print(f"❌ error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
