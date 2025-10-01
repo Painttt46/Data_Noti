@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException ,Request 
 from pydantic import BaseModel, Field
 from typing import Any, Dict
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,6 +17,15 @@ class PowerAutomatePayload(BaseModel):
     responder_email: str = Field(..., example="user@example.com")
     submission_time: str = Field(..., example="2025-09-30T10:30:00Z")
     form_data: Dict[str, Any]
+
+@app.api_route("/debug", methods=["GET", "POST", "OPTIONS"])
+async def debug_endpoint(request: Request):
+    headers = dict(request.headers)
+    print("--- DEBUG LOG ---")
+    print(f"Method: {request.method}")
+    print(f"Headers: {headers}")
+    print("--- END DEBUG ---")
+    return {"status": "ok", "received_headers": headers}
 
 @app.get("/")
 async def read_root():
