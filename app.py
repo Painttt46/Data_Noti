@@ -4,6 +4,14 @@ from typing import Any, Dict
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # อนุญาตการเชื่อมต่อจากทุกโดเมน
+    allow_credentials=True,
+    allow_methods=["*"], # อนุญาตทุก HTTP Method
+    allow_headers=["*"], # อนุญาตทุก HTTP Header
+)
+
 class PowerAutomatePayload(BaseModel):
     responder_email: str = Field(..., example="user@example.com")
     submission_time: str = Field(..., example="2025-09-30T10:30:00Z")
