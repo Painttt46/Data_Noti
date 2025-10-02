@@ -43,3 +43,7 @@ async def receive_power_automate_data(payload: PowerAutomatePayload):
     except Exception as e:
         print(f"❌ error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/Notify")
+async def notify(request: Request):
+   #รอ DATA BAS
